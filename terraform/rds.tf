@@ -1,8 +1,8 @@
 # ─── RDS Subnet Group ────────────────────────────────────────────────────────
 
 resource "aws_db_subnet_group" "postgres" {
-  name        = "${var.project_name}-db-subnet-group"
-  description = "Private subnets for RDS — no public access"
+  name        = "db-subnet-${var.project_name}"
+  description = "Private subnets for RDS"
   subnet_ids  = aws_subnet.private[*].id
 
   tags = { Name = "${var.project_name}-db-subnet-group" }
@@ -11,11 +11,10 @@ resource "aws_db_subnet_group" "postgres" {
 # ─── RDS Parameter Group ─────────────────────────────────────────────────────
 
 resource "aws_db_parameter_group" "postgres" {
-  name        = "${var.project_name}-pg-params"
+  name        = "pg-params-${var.project_name}"
   family      = "postgres15"
   description = "Custom parameter group for ${var.project_name}"
 
-  # SecOps: enable query logging for audit
   parameter {
     name  = "log_connections"
     value = "1"
@@ -26,64 +25,64 @@ resource "aws_db_parameter_group" "postgres" {
     value = "1"
   }
 
-  parameter {
-    name  = "log_duration"
-    value = "1"
-  }
-
   tags = { Name = "${var.project_name}-pg-params" }
 }
 
 # ─── RDS PostgreSQL Instance ──────────────────────────────────────────────────
 
 resource "aws_db_instance" "postgres" {
-  identifier = "${var.project_name}-postgres"
+  identifier = "db-${var.project_name}"
 
-  # Engine
   engine               = "postgres"
-  engine_version       = "15.4"
+  engine_version       = "15.19"
   instance_class       = var.db_instance_class
   parameter_group_name = aws_db_parameter_group.postgres.name
 
-  # Storage
   allocated_storage     = var.db_allocated_storage
-  max_allocated_storage = 100 # Auto-scaling up to 100GB
+  max_allocated_storage = 100
   storage_type          = "gp3"
-  storage_encrypted     = true # SecOps: encryption at rest
+  storage_encrypted     = true
 
-  # Credentials — pulled from random_password, NOT hardcoded
   db_name  = var.db_name
   username = var.db_username
   password = random_password.db_password.result
 
-  # Networking — SecOps: private only, no public access
   db_subnet_group_name   = aws_db_subnet_group.postgres.name
   vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible    = false
-  multi_az               = false # Cost optimization: single AZ for demo
+  multi_az               = false
 
-  # Backup strategy
-  backup_retention_period = 7       # 7-day automated backups
-  backup_window           = "02:00-03:00" # UTC low-traffic window
-  maintenance_window      = "sun:04:00-sun:05:00"
+  backup_retention_period  = 7
+  backup_window            = "02:00-03:00"
+  maintenance_window       = "sun:04:00-sun:05:00"
   delete_automated_backups = false
 
-  # Monitoring
-  monitoring_interval = 60 # Enhanced monitoring every 60s
+  monitoring_interval = 60
   monitoring_role_arn = aws_iam_role.rds_monitoring.arn
   enabled_cloudwatch_logs_exports = [
     "postgresql",
     "upgrade"
   ]
 
-  # Lifecycle
-  skip_final_snapshot       = false
-  final_snapshot_identifier = "${var.project_name}-final-snapshot"
-  deletion_protection       = false # Set true in real production
+  skip_final_snapshot       = true
+  deletion_protection       = false
 
   tags = { Name = "${var.project_name}-postgres" }
+}
 
-  depends_on = [aws_secretsmanager_secret_version.db_credentials]
+# ─── Store DB credentials in Secrets Manager AFTER RDS is created ────────────
+
+resource "aws_secretsmanager_secret_version" "db_credentials" {
+  secret_id = aws_secretsmanager_secret.db_credentials.id
+
+  secret_string = jsonencode({
+    username = var.db_username
+    password = random_password.db_password.result
+    host     = aws_db_instance.postgres.address
+    port     = 5432
+    dbname   = var.db_name
+    url      = "postgresql://${var.db_username}:${random_password.db_password.result}@${aws_db_instance.postgres.address}:5432/${var.db_name}"
+  })
 }
 
 # ─── RDS Enhanced Monitoring Role ────────────────────────────────────────────
@@ -183,7 +182,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_free_memory" {
   namespace           = "AWS/RDS"
   period              = 300
   statistic           = "Average"
-  threshold           = 134217728 # 128MB in bytes
+  threshold           = 134217728
   treat_missing_data  = "notBreaching"
 
   dimensions = {

@@ -17,13 +17,7 @@ resource "aws_instance" "app" {
     delete_on_termination = true
   }
 
-  user_data = base64encode(templatefile("${path.module}/scripts/app_userdata.sh", {
-    aws_region     = var.aws_region
-    secret_name    = aws_secretsmanager_secret.db_credentials.name
-    ecr_image_uri  = var.ecr_image_uri
-    app_port       = var.app_port
-    project_name   = var.project_name
-  }))
+  user_data = base64encode(file("${path.module}/scripts/app_userdata.sh"))
 
   tags = { Name = "${var.project_name}-app-server" }
 
@@ -52,12 +46,7 @@ resource "aws_instance" "monitoring" {
     delete_on_termination = true
   }
 
-  user_data = base64encode(templatefile("${path.module}/scripts/monitoring_userdata.sh", {
-    app_instance_ip  = aws_instance.app.private_ip
-    aws_region       = var.aws_region
-    project_name     = var.project_name
-    grafana_password = random_password.grafana_admin.result
-  }))
+  user_data = base64encode(file("${path.module}/scripts/monitoring_userdata.sh"))
 
   tags = { Name = "${var.project_name}-monitoring-server" }
 
