@@ -1,6 +1,6 @@
 // Edit these two values once before publishing.
-const REPO_URL = "https://github.com/YOUR-USERNAME/8byte-devops-assignment";
-const LINKEDIN_URL = "https://www.linkedin.com/";
+const REPO_URL = "https://github.com/VaibhavSoun/8byteAi_Assignment";
+const LINKEDIN_URL = "https://www.linkedin.com/in/vaibhav-singh-soun-6811a620/";
 
 const repoLinks = document.querySelectorAll('[data-repo]');
 repoLinks.forEach(a => a.href = REPO_URL);
