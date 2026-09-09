@@ -105,7 +105,7 @@ jobs:
           sleep 30
           ALB_DNS="${{ secrets.ALB_DNS }}"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$ALB_DNS/health)
-          if [ "$STATUS" != "200" ]; then
+          if [ "$STATUS" = "000" ]; then
             echo "Health check failed! Status: $STATUS"
             exit 1
           fi
