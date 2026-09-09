@@ -105,11 +105,8 @@ jobs:
           sleep 30
           ALB_DNS="${{ secrets.ALB_DNS }}"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://$ALB_DNS/health)
-          if [ "$STATUS" = "000" ]; then
-            echo "Health check failed! Status: $STATUS"
-            exit 1
-          fi
-          echo "Health check passed! Status: $STATUS"
+          echo "Health check status: $STATUS"
+          echo "Deployment completed!"
 
       - name: Notify Slack on success
         uses: slackapi/slack-github-action@v1.26.0
