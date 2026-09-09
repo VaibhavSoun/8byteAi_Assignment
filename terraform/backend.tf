@@ -9,16 +9,16 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "8byte-devops-tfstate"
-    key            = "prod/terraform.tfstate"
-    region         = "ap-northeast-1"
-    encrypt        = true
-    dynamodb_table = "8byte-devops-tflock"
+    bucket  = "8byte-devops-tfstate-436287745154"
+    key     = "prod/terraform.tfstate"
+    region  = "ap-northeast-1"
+    encrypt = true
   }
 }
 
 provider "aws" {
-  region = var.aws_region
+  region  = var.aws_region
+  profile = "DevOps-Vaibhav-436287745154"
 
   default_tags {
     tags = {
