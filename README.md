@@ -60,41 +60,41 @@ All infrastructure provisioned using Terraform with remote state in S3 (Tokyo re
 - S3 bucket for ALB access logs + VPC Flow Logs
 
 ### EC2 Instances Running in Tokyo
-![EC2 Instances](docs/screenshots/Screenshot_2026-09-09_235607.png)
+![EC2 Instances](docs/screenshots/Screenshot 2026-09-09 235607.png)
 
 ### App EC2 Security Groups (Least Privilege — Port 8000 from ALB only)
-![App Security Groups](docs/screenshots/Screenshot_2026-09-09_235717.png)
+![App Security Groups](docs/screenshots/Screenshot 2026-09-09 235717.png)
 
 ### App EC2 CloudWatch Monitoring
-![App Monitoring](docs/screenshots/Screenshot_2026-09-09_235809.png)
+![App Monitoring](docs/screenshots/Screenshot 2026-09-09 235809.png)
 
 ### Monitoring EC2 Security Groups (Port 3000 Grafana, 9090 Prometheus)
-![Monitoring Security Groups](docs/screenshots/Screenshot_2026-09-09_235851.png)
+![Monitoring Security Groups](docs/screenshots/Screenshot 2026-09-09 235851.png)
 
 ### Monitoring EC2 CloudWatch Monitoring
-![Monitoring EC2](docs/screenshots/Screenshot_2026-09-09_235914.png)
+![Monitoring EC2](docs/screenshots/Screenshot 2026-09-09 235914.png)
 
 ### RDS PostgreSQL — Available, Encrypted, Private
-![RDS Security](docs/screenshots/Screenshot_2026-09-09_235958.png)
-![RDS Summary](docs/screenshots/Screenshot_2026-09-10_000021.png)
+![RDS Security](docs/screenshots/Screenshot 2026-09-09 235958.png)
+![RDS Summary](docs/screenshots/Screenshot 2026-09-10 000021.png)
 
 ### VPC Resource Map (4 Subnets, IGW, NAT, Route Tables)
-![VPC](docs/screenshots/Screenshot_2026-09-10_000107.png)
+![VPC](docs/screenshots/Screenshot 2026-09-10 000107.png)
 
 ### Application Load Balancer — Active, Internet-facing
-![ALB](docs/screenshots/Screenshot_2026-09-10_000153.png)
+![ALB](docs/screenshots/Screenshot 2026-09-10 000153.png)
 
 ### ALB Resource Map — Both Targets Healthy ✅
-![ALB Resource Map](docs/screenshots/Screenshot_2026-09-10_003014.png)
+![ALB Resource Map](docs/screenshots/Screenshot 2026-09-10 003014.png)
 
 ### ECR Repository (AES-256 Encrypted)
-![ECR Repo](docs/screenshots/Screenshot_2026-09-10_001646.png)
+![ECR Repo](docs/screenshots/Screenshot 2026-09-10 001646.png)
 
 ### ECR Image Pushed (64MB, tagged latest)
-![ECR Image](docs/screenshots/Screenshot_2026-09-10_010242.png)
+![ECR Image](docs/screenshots/Screenshot 2026-09-10 010242.png)
 
 ### AWS Secrets Manager — 2 Secrets (DB + Grafana)
-![Secrets Manager](docs/screenshots/Screenshot_2026-09-10_001606.png)
+![Secrets Manager](docs/screenshots/Screenshot 2026-09-10 001606.png)
 
 ### Terraform Apply Output
 ```
@@ -117,16 +117,16 @@ vpc_id                  = "vpc-064d8efea60fcba82"
 FastAPI application containerized with Docker, pushed to ECR, deployed to EC2 via SSM (no SSH).
 
 ### App Live — FastAPI Swagger UI via ALB
-![FastAPI Swagger](docs/screenshots/Screenshot_2026-09-10_002428.png)
+![FastAPI Swagger](docs/screenshots/Screenshot 2026-09-10 002428.png)
 
 ### Health Endpoint — `{"status":"healthy"}`
-![Health Check](docs/screenshots/Screenshot_2026-09-10_002452.png)
+![Health Check](docs/screenshots/Screenshot 2026-09-10 002452.png)
 
 ### Root Endpoint Response
-![Root](docs/screenshots/Screenshot_2026-09-10_002513.png)
+![Root](docs/screenshots/Screenshot 2026-09-10 002513.png)
 
 ### Docker Container Running on EC2 (via SSM Session Manager)
-![Docker Running](docs/screenshots/Screenshot_2026-09-10_002618.png)
+![Docker Running](docs/screenshots/Screenshot 2026-09-10 002618.png)
 
 ---
 
@@ -160,16 +160,16 @@ Manual trigger only (`workflow_dispatch`):
 - Slack notification
 
 ### Build & Push to ECR — All Steps Green ✅
-![Build Pipeline](docs/screenshots/Screenshot_2026-09-10_002911.png)
+![Build Pipeline](docs/screenshots/Screenshot 2026-09-10 002911.png)
 
 ### Full Staging Pipeline — Succeeded ✅
-![Staging Success](docs/screenshots/Screenshot_2026-09-10_010308.png)
+![Staging Success](docs/screenshots/Screenshot 2026-09-10 010308.png)
 
 ### Production Pipeline — Manual Approval + Security Gate
-![Production Pipeline](docs/screenshots/Screenshot_2026-09-10_011016.png)
+![Production Pipeline](docs/screenshots/Screenshot 2026-09-10 011016.png)
 
 ### Production Trivy Security Gate — Blocking CRITICAL CVEs
-![Trivy Security Gate](docs/screenshots/Screenshot_2026-09-10_011041.png)
+![Trivy Security Gate](docs/screenshots/Screenshot 2026-09-10 011041.png)
 
 > The production deployment was intentionally blocked by Trivy finding CRITICAL vulnerabilities in the base Debian image. This demonstrates the security gate working as designed — protecting production from vulnerable containers. In production, the fix would be to update the base image to a patched version.
 
@@ -190,7 +190,7 @@ Node Exporter running on both EC2 instances, scraped by Prometheus every 15s. Gr
 - **Network I/O:** Live traffic
 - **Uptime:** Tracked
 
-![Grafana EC2 Dashboard](docs/screenshots/Screenshot_2026-09-10_000711.png)
+![Grafana EC2 Dashboard](docs/screenshots/Screenshot 2026-09-10 000711.png)
 
 ### Dashboard 2 — RDS Monitoring (CloudWatch + Grafana)
 
@@ -201,7 +201,7 @@ CloudWatch datasource configured in Grafana showing RDS metrics for `db-8byte-de
 - **Freeable Memory:** ~188 MiB
 - **Free Storage Space:** 18.9 GiB
 
-![Grafana RDS Dashboard](docs/screenshots/Screenshot_2026-09-10_001222.png)
+![Grafana RDS Dashboard](docs/screenshots/Screenshot 2026-09-10 001222.png)
 
 ### CloudWatch Alarms — 7 Alarms, All OK ✅
 
@@ -217,7 +217,7 @@ CloudWatch datasource configured in Grafana showing RDS metrics for `db-8byte-de
 
 All alarms trigger SNS → email notification.
 
-![CloudWatch Alarms](docs/screenshots/Screenshot_2026-09-09_001534.png)
+![CloudWatch Alarms](docs/screenshots/Screenshot 2026-09-09 001534.png)
 
 ---
 
