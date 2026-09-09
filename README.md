@@ -1,11 +1,10 @@
 # 8Byte AI DevOps Assignment
 
-> **End-to-end DevOps implementation** — Infrastructure as Code, CI/CD Pipelines, Monitoring & Observability, and Security best practices on AWS (ap-northeast-1 / Tokyo)
+> **End-to-end DevOps implementation** ...
 
 **Author:** Vaibhav Singh Soun | **Role:** DevOps Engineer
 
----
-
+📋 [View Challenges & Resolutions](CHALLENGES.md) | 🏗️ [Architecture](#architecture-overview) | 📊 [Monitoring](#part-3-monitoring--logging) | 🔒 [Security](#part-4-security-implementation-secops)
 ## Architecture Overview
 
 ```
